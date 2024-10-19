@@ -1,7 +1,9 @@
-import { Button, Flex, Input, Select, Spacer } from '@chakra-ui/react';
+import { Flex, Input, Select, Spacer } from '@chakra-ui/react';
 
 import { ThemeToggle } from './theme-toggle';
 import { useEffect, useState } from 'react';
+import { WishlistImportButton } from './wishlist-import-button';
+import { useAuth } from '~/lib/context/use-auth';
 
 interface Game {
   id: number;
@@ -12,12 +14,12 @@ interface Game {
   } | null;
 }
 
-
 export const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [games, setGames] = useState<Array<Game>>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
+  const { state } = useAuth();
 
   // Debounce search effect
   useEffect(() => {
@@ -34,7 +36,7 @@ export const Header = () => {
 
   const fetchGames = async (term: string) => {
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
       const response = await fetch(
@@ -70,7 +72,7 @@ export const Header = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button w="33%">Import Wishlist</Button>
+          <WishlistImportButton disabled={!state.steamId} />
         </Flex>
         <Flex marginLeft="auto">
           <Select>
@@ -90,7 +92,9 @@ export const Header = () => {
               <p>{game.name}</p>
               <p>
                 Price:{' '}
-                {game.price ? `$${(game.price.final / 100).toFixed(2)}` : 'Free'}
+                {game.price
+                  ? `$${(game.price.final / 100).toFixed(2)}`
+                  : 'Free'}
               </p>
             </li>
           ))}

@@ -1,20 +1,17 @@
-import React, { useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { useAuth } from '~/lib/context/use-auth';
 
-const UserProfile = () => {
-  const { state, dispatch } = useContext(AuthContext);
+const UserProfile: React.FC = () => {
+  const { state, dispatch } = useAuth();
   const { steamId } = state;
-
-  const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
-  };
 
   return (
     <div>
       {steamId ? (
         <div>
           <p>Logged in as Steam user: {steamId}</p>
-          <button onClick={handleLogout}>Logout</button>
+          <button type="button" onClick={() => dispatch({ type: 'LOGOUT' })}>
+            Logout
+          </button>
         </div>
       ) : (
         <p>You are not logged in.</p>
