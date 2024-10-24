@@ -15,11 +15,15 @@ import {
 import { useAuth } from '~/lib/context/use-auth';
 
 interface WishlistItem {
-  id: number;
   name: string;
+  price: number;
 }
 
-export const WishlistImportButton: React.FC = ({ disabled }) => {
+interface WishlistImportButtonProps {
+  disabled: boolean;
+}
+
+export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({ disabled }) => {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Controls the modal visibility
   const { state } = useAuth(); // Access the steamId from context
   const [wishlistData, setWishlistData] = useState<Array<WishlistItem>>([]); // State to store wishlist data
@@ -79,13 +83,15 @@ export const WishlistImportButton: React.FC = ({ disabled }) => {
               <Text color="red.500">{error}</Text>
             ) : (
               <div>
-                {wishlistData.length > 0 ? (
+                {Object.keys(wishlistData).length > 0 ? (
                   <ul>
-                    {wishlistData.map((item) => (
-                      <li key={item.id}>
-                        <Text>{item.name}</Text>
-                      </li>
-                    ))}
+                    {Object.entries(wishlistData).map(
+                      ([itemId, itemDetails]) => (
+                        <li key={itemId}>
+                          <Text fontWeight="bold">{itemDetails.name}</Text>
+                        </li>
+                      ),
+                    )}
                   </ul>
                 ) : (
                   <Text>No wishlist items found.</Text>

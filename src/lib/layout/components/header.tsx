@@ -55,7 +55,7 @@ export const Header = () => {
   };
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" w="full">
       <Flex
         as="header"
         width="full"

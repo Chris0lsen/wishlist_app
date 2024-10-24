@@ -13,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <Box margin="0 auto" maxWidth={800} transition="0.5s ease-out">
       <Meta />
-      <Flex wrap="wrap" margin="8" minHeight="90vh">
+      <Flex wrap="wrap" w="100%" margin="8" minHeight="90vh">
         <Header />
         <Box width="full" as="main" marginY={22}>
           {children}
