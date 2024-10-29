@@ -1,6 +1,6 @@
 import React from 'react';
 import type { PathRouteProps } from 'react-router-dom';
-import { SteamAuthHandler } from '../context/steam-auth-handler';
+import { SteamAuthHandler } from '../utils/steam-auth-handler';
 
 const Home = React.lazy(() => import('~/lib/pages/home'));
 

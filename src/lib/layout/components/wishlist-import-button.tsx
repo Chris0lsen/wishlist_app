@@ -12,27 +12,39 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react';
-import { useAuth } from '~/lib/context/use-auth';
+import { get } from '~/lib/utils/api';
+import { useAuthStore } from '~/lib/stores/auth-store';
 
 interface WishlistItem {
   name: string;
   price: number;
 }
 
+interface WishlistData {
+  [key: string]: WishlistItem;
+}
+
 interface WishlistImportButtonProps {
   disabled: boolean;
 }
 
-export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({ disabled }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure(); // Controls the modal visibility
-  const { state } = useAuth(); // Access the steamId from context
-  const [wishlistData, setWishlistData] = useState<Array<WishlistItem>>([]); // State to store wishlist data
+export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
+  disabled,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [wishlistData, setWishlistData] = useState<WishlistData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuthStore();
 
-  // Function to handle the click event and show the import modal
   const handleShowImportModal = async () => {
-    if (!state.steamId) {
+    if (!(isAuthenticated && user)) {
+      setError('User is not authenticated.');
+      return;
+    }
+
+    const steamId = user.steamId;
+    if (!steamId) {
       setError('Steam ID is not available.');
       return;
     }
@@ -41,23 +53,18 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({ disa
     setError(null);
 
     try {
-      const response = await fetch(
-        `http://192.168.68.90:4000/api/wishlist?steam_id=${state.steamId}&cc=en`,
+      const data = await get<WishlistData>(
+        `/wishlist?steam_id=${steamId}&cc=en`,
       );
-
-      if (!response.ok) {
-        throw new Error(`Error fetching wishlist: ${response.statusText}`);
-      }
-
-      const data = await response.json();
       setWishlistData(data);
+      onOpen(); // Open the modal after the data is fetched
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred.',
       );
+      onOpen(); // Open the modal even if there's an error
     } finally {
       setIsLoading(false);
-      onOpen(); // Open the modal after the data is fetched or if there's an error
     }
   };
 

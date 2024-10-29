@@ -1,15 +1,14 @@
-import { useAuth } from '~/lib/context/use-auth';
+import { useAuthStore } from '~/lib/stores/auth-store'
 
 const UserProfile: React.FC = () => {
-  const { state, dispatch } = useAuth();
-  const { steamId } = state;
+  const { user, logout } = useAuthStore();
 
   return (
     <div>
-      {steamId ? (
+      {user?.steamId ? (
         <div>
-          <p>Logged in as Steam user: {steamId}</p>
-          <button type="button" onClick={() => dispatch({ type: 'LOGOUT' })}>
+          <p>Logged in as Steam user: {user.steamId}</p>
+          <button type="button" onClick={logout}>
             Logout
           </button>
         </div>

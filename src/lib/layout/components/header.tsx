@@ -3,7 +3,7 @@ import { Flex, Input, Select, Spacer } from '@chakra-ui/react';
 import { ThemeToggle } from './theme-toggle';
 import { useEffect, useState } from 'react';
 import { WishlistImportButton } from './wishlist-import-button';
-import { useAuth } from '~/lib/context/use-auth';
+import { useAuthStore } from '~/lib/stores/auth-store';
 
 interface Game {
   id: number;
@@ -19,7 +19,8 @@ export const Header = () => {
   const [games, setGames] = useState<Array<Game>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const { state } = useAuth();
+  const { user } = useAuthStore();
+
 
   // Debounce search effect
   useEffect(() => {
@@ -40,7 +41,7 @@ export const Header = () => {
 
     try {
       const response = await fetch(
-        `http://192.168.68.90:4000/api/search?term=${encodeURIComponent(term)}`,
+        `http://192.168.68.90:4000/api/steam/search?term=${encodeURIComponent(term)}`,
       );
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -72,7 +73,7 @@ export const Header = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <WishlistImportButton disabled={!state.steamId} />
+          <WishlistImportButton disabled={!user?.steamId} />
         </Flex>
         <Flex marginLeft="auto">
           <Select>
