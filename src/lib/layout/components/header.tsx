@@ -1,9 +1,9 @@
 import { Flex, Input, Select, Spacer } from '@chakra-ui/react';
 
-import { ThemeToggle } from './theme-toggle';
 import { useEffect, useState } from 'react';
-import { WishlistImportButton } from './wishlist-import-button';
 import { useAuthStore } from '~/lib/stores/auth-store';
+import { ThemeToggle } from './theme-toggle';
+import { WishlistImportButton } from './wishlist-import-button';
 
 interface Game {
   id: number;
@@ -20,7 +20,6 @@ export const Header = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const { user } = useAuthStore();
-
 
   // Debounce search effect
   useEffect(() => {
@@ -41,7 +40,7 @@ export const Header = () => {
 
     try {
       const response = await fetch(
-        `http://192.168.68.90:4000/api/steam/search?term=${encodeURIComponent(term)}`,
+        `http://localhost:4000/api/steam/search?term=${encodeURIComponent(term)}`,
       );
       if (!response.ok) {
         throw new Error('Network response was not ok');
