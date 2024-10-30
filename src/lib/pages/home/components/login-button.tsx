@@ -1,6 +1,6 @@
 const LoginButton = () => {
   const handleLogin = () => {
-    window.location.href = 'http://192.168.68.90:4000/api/auth/steam';
+    window.location.href = 'http://localhost:4000/api/auth/steam';
   };
 
   return (
