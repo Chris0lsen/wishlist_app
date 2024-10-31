@@ -1,7 +1,7 @@
 // src/utils/api.ts
 
 import { useAuthStore } from '../stores/auth-store';
-import { refreshAccessToken, handleLogout } from './auth';
+import { handleLogout, refreshAccessToken } from './auth';
 
 interface RequestOptions extends Omit<RequestInit, 'headers'> {
   headers?: Record<string, string>;

@@ -1,4 +1,4 @@
-import { useAuthStore } from '~/lib/stores/auth-store'
+import { useAuthStore } from '~/lib/stores/auth-store';
 
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuthStore();

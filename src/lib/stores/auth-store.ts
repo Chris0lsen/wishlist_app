@@ -1,5 +1,5 @@
-import {create} from 'zustand';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { create } from 'zustand';
 import type { AuthState, DecodedPayload } from '../types/types';
 
 interface AuthStore extends AuthState {
