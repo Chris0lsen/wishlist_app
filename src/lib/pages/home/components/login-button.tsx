@@ -1,6 +1,7 @@
 const LoginButton = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const handleLogin = () => {
-    window.location.href = 'http://localhost:4000/api/auth/steam';
+    window.location.href = `${apiUrl}/auth/steam`;
   };
 
   return (

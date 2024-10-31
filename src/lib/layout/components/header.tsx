@@ -27,6 +27,8 @@ export const Header = () => {
   const [error, setError] = useState<string>('');
   const { user } = useAuthStore();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // Debounce search effect
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -46,7 +48,7 @@ export const Header = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/steam/search?term=${encodeURIComponent(term)}`,
+        `${apiUrl}/steam/search?term=${encodeURIComponent(term)}`,
       );
       if (!response.ok) {
         throw new Error('Network response was not ok');
