@@ -1,15 +1,12 @@
-import { extendTheme } from '@chakra-ui/react';
+import { createSystem, defaultConfig } from '@chakra-ui/react';
 
-import { config } from './config';
-
-export const theme = extendTheme({
-  fonts: {
-    heading: 'Plus Jakarta Sans Variable, sans-serif',
-    body: 'Plus Jakarta Sans Variable, sans-serif',
+export const system = createSystem(defaultConfig, {
+  theme: {
+    tokens: {
+      fonts: {
+        heading: { value: `'Figtree', sans-serif` },
+        body: { value: `'Figtree', sans-serif` },
+      },
+    },
   },
-  components: {
-    // Button: {
-    // }
-  },
-  config,
 });

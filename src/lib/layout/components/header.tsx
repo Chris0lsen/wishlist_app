@@ -1,8 +1,13 @@
-import { Flex, Input, Select, Spacer } from '@chakra-ui/react';
-
+import { Flex, Input, Spacer, createListCollection } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+} from '~/components/ui/select';
 import { useAuthStore } from '~/lib/stores/auth-store';
-import { ThemeToggle } from './theme-toggle';
 import { WishlistImportButton } from './wishlist-import-button';
 
 interface Game {
@@ -16,6 +21,7 @@ interface Game {
 
 export const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState<Array<string>>([]);
   const [games, setGames] = useState<Array<Game>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -54,6 +60,13 @@ export const Header = () => {
     }
   };
 
+  const languages = createListCollection({
+    items: [
+      { label: 'EN', value: 'en' },
+      { label: 'ES', value: 'es' },
+    ],
+  });
+
   return (
     <Flex direction="column" w="full">
       <Flex
@@ -67,7 +80,7 @@ export const Header = () => {
         <Spacer />
         <Flex direction="row" width="80%">
           <Input
-            w="67%"
+            width="67%"
             placeholder="Search for a game..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -75,10 +88,23 @@ export const Header = () => {
           <WishlistImportButton disabled={!user?.steamId} />
         </Flex>
         <Flex marginLeft="auto">
-          <Select>
-            <option>EN</option>
-          </Select>
-          <ThemeToggle />
+          <SelectRoot
+            collection={languages}
+            size="xs"
+            value={selectedLanguage}
+            onValueChange={(e) => setSelectedLanguage(e.value)}
+          >
+            <SelectTrigger>
+              <SelectLabel>Language</SelectLabel>
+            </SelectTrigger>
+            <SelectContent>
+              {languages.items.map((language) => (
+                <SelectItem item={language} key={language.value}>
+                  {language.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
         </Flex>
       </Flex>
       <Flex>

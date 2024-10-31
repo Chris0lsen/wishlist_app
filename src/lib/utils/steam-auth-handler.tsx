@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth-store';
 
 export const SteamAuthHandler: React.FC = () => {
@@ -15,11 +15,11 @@ export const SteamAuthHandler: React.FC = () => {
       // Use the login action from the auth store
       login(accessToken);
 
-      // Navigate to the home page or desired route
+      // Navigate to the home page
       navigate('/');
     } else {
       // Handle authentication error
-      navigate('/login');
+      navigate('/');
     }
   }, [location, navigate, login]);
 

@@ -1,19 +1,20 @@
-import { useState } from 'react';
 import {
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
   Spinner,
   Text,
 } from '@chakra-ui/react';
-import { get } from '~/lib/utils/api';
+import { useState } from 'react';
 import { useAuthStore } from '~/lib/stores/auth-store';
+import { get } from '~/lib/utils/api';
 
 interface WishlistItem {
   name: string;
@@ -31,7 +32,7 @@ interface WishlistImportButtonProps {
 export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
   disabled,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const [wishlistData, setWishlistData] = useState<WishlistData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,12 +58,12 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
         `/wishlist?steam_id=${steamId}&cc=en`,
       );
       setWishlistData(data);
-      onOpen(); // Open the modal after the data is fetched
+      setOpen(true); // Open the modal after the data is fetched
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred.',
       );
-      onOpen(); // Open the modal even if there's an error
+      setOpen(true); // Open the modal even if there's an error
     } finally {
       setIsLoading(false);
     }
@@ -70,20 +71,29 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
 
   return (
     <>
-      <Button
-        colorScheme="blue"
-        disabled={disabled}
-        onClick={handleShowImportModal}
+      <DialogRoot
+        lazyMount
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}
+        size="xl"
       >
-        Import Wishlist
-      </Button>
+        <DialogTrigger>
+          <Button
+            colorScheme="blue"
+            disabled={disabled}
+            onClick={handleShowImportModal}
+          >
+            Import Wishlist
+          </Button>
+        </DialogTrigger>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Import Wishlist</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Import Wishlist</DialogTitle>
+          </DialogHeader>
+
+          <DialogCloseTrigger />
+          <DialogBody>
             {isLoading ? (
               <Spinner size="lg" />
             ) : error ? (
@@ -105,14 +115,16 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
                 )}
               </div>
             )}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogBody>
+          <DialogFooter>
+            <DialogActionTrigger>
+              <Button colorScheme="blue" mr={3} onClick={() => setOpen(false)}>
+                Close
+              </Button>
+            </DialogActionTrigger>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   );
 };
