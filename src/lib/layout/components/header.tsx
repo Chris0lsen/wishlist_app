@@ -107,6 +107,24 @@ export const Header = () => {
               ))}
             </SelectContent>
           </SelectRoot>
+          <SelectRoot
+            collection={languages}
+            size="xs"
+            value={selectedLanguage}
+            onValueChange={(e) => setSelectedLanguage(e.value)}
+          >
+            <SelectTrigger>
+              <SelectLabel>Language</SelectLabel>
+            </SelectTrigger>
+            <SelectContent>
+              {languages.items.map((language) => (
+                <SelectItem item={language} key={language.value}>
+                  {language.label}
+                </SelectItem>
+              ))}
+              <WishlistImportButton disabled={!user?.steamId} />
+            </SelectContent>
+          </SelectRoot>
         </Flex>
       </Flex>
       <Flex>

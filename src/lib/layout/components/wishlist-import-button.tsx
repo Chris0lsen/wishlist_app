@@ -13,6 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { AiOutlineImport } from 'react-icons/ai';
 import { useAuthStore } from '~/lib/stores/auth-store';
 import { get } from '~/lib/utils/api';
 
@@ -83,7 +84,7 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
             disabled={disabled}
             onClick={handleShowImportModal}
           >
-            Import Wishlist
+            <AiOutlineImport /> Import Wishlist
           </Button>
         </DialogTrigger>
 
