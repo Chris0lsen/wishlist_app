@@ -8,6 +8,7 @@ import {
   SelectTrigger,
 } from '~/components/ui/select';
 import { useAuthStore } from '~/lib/stores/auth-store';
+import { get } from '~/lib/utils/api';
 import type { GroupData, GroupSelectProps } from '../../types/types';
 import { WishlistImportButton } from './wishlist-import-button';
 
