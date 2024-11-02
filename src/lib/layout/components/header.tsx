@@ -8,7 +8,7 @@ import {
   SelectTrigger,
 } from '~/components/ui/select';
 import { useAuthStore } from '~/lib/stores/auth-store';
-import { WishlistImportButton } from './wishlist-import-button';
+import { GroupSelect } from './group-select';
 
 interface Game {
   id: number;
@@ -87,26 +87,7 @@ export const Header = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <SelectRoot
-            width="33%"
-            // disabled={!user?.steamId}
-            collection={languages}
-            size="xs"
-            value={selectedLanguage}
-            onValueChange={(e) => setSelectedLanguage(e.value)}
-          >
-            <SelectTrigger>
-              <SelectLabel>My Wishlists</SelectLabel>
-            </SelectTrigger>
-            <SelectContent>
-              {languages.items.map((language) => (
-                <SelectItem item={language} key={language.value}>
-                  {language.label}
-                </SelectItem>
-              ))}
-              <WishlistImportButton disabled={!user?.steamId} />
-            </SelectContent>
-          </SelectRoot>
+          <GroupSelect disabled={!user?.steamId} />
         </Flex>
         <Flex marginLeft="auto">
           <SelectRoot
