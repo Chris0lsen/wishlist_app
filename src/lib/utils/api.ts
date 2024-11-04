@@ -6,8 +6,7 @@ import { handleLogout, refreshAccessToken } from './auth';
 interface RequestOptions extends Omit<RequestInit, 'headers'> {
   headers?: Record<string, string>;
 }
-
-const baseUrl = '/api'; // Adjust this to match your API's base URL
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export const get = async <T>(
   url: string,

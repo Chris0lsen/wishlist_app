@@ -1,3 +1,8 @@
+import type {
+  QueryObserverResult,
+  RefetchOptions,
+} from '@tanstack/react-query';
+
 export interface State {
   authState: AuthState;
 }
@@ -52,6 +57,52 @@ export interface WishlistData {
 
 export interface WishlistImportButtonProps {
   disabled: boolean;
+}
+
+export interface Wishlist {
+  id: number;
+  name: string;
+  group_id: number;
+}
+
+export interface Group {
+  id: number;
+  name: string;
+}
+
+export interface Game {
+  id: number;
+  tiny_image: string;
+  name: string;
+  price: {
+    final: number;
+  } | null;
+}
+
+export interface GameItemProps {
+  game: Game;
+  wishlists: Array<Wishlist>;
+  groups: Array<Group>;
+  refetchWishlistsAndGroups: (
+    options?: RefetchOptions | undefined,
+  ) => Promise<
+    QueryObserverResult<
+      { wishlists: Array<Wishlist>; groups: Array<Group> },
+      Error
+    >
+  >;
+}
+
+export interface CollectionWishlist {
+  label: string;
+  value: string;
+}
+
+export interface CollectionGroup {
+  type: 'group';
+  label: string;
+  value: string;
+  items: Array<CollectionWishlist>;
 }
 
 export type Action =
