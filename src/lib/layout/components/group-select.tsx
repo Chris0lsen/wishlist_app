@@ -1,5 +1,5 @@
 import { type ListCollection, createListCollection } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SelectContent,
   SelectItem,
@@ -19,30 +19,33 @@ export const GroupSelect: React.FC<GroupSelectProps> = ({ disabled }) => {
   const { user } = useAuthStore();
   let groups: ListCollection;
 
-  (async () => {
-    if (!user) {
-      setError('User is not authenticated.');
-      return;
-    }
+  useEffect(() => {
+    async function fetchGroups() {
+      if (!user) {
+        setError('User is not authenticated.');
+        return;
+      }
 
-    const userId = user.userId;
-    if (!userId) {
-      setError('User ID is not available.');
-      return;
-    }
+      const userId = user.userId;
+      if (!userId) {
+        setError('User ID is not available.');
+        return;
+      }
 
-    setError(null);
+      setError(null);
 
-    try {
-      const data = await get<GroupData>(`/groups/${userId}`);
-      setGroupData(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred.',
-      );
-      return error;
+      try {
+        const data = await get<GroupData>(`/groups/${userId}`);
+        setGroupData(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'An unexpected error occurred.',
+        );
+        return error;
+      }
     }
-  })();
+    fetchGroups();
+  });
 
   if (Object.keys(groupData).length > 0) {
     const groupItems = Object.entries(groupData).map(
