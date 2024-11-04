@@ -29,6 +29,31 @@ export interface AuthStatePayload {
   accessToken: string;
 }
 
+export interface GroupItem {
+  name: string;
+}
+
+export interface GroupData {
+  [key: string]: GroupItem;
+}
+
+export interface GroupSelectProps {
+  disabled: boolean;
+}
+
+export interface WishlistItem {
+  name: string;
+  price: number;
+}
+
+export interface WishlistData {
+  [key: string]: WishlistItem;
+}
+
+export interface WishlistImportButtonProps {
+  disabled: boolean;
+}
+
 export type Action =
   | { type: 'SET_AUTH_STATE'; payload: AuthStatePayload }
   | { type: 'LOGOUT' };
