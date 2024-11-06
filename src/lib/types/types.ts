@@ -68,6 +68,7 @@ export interface Wishlist {
 export interface Group {
   id: number;
   name: string;
+  wishlists: Array<Wishlist>;
 }
 
 export interface Game {
@@ -81,16 +82,10 @@ export interface Game {
 
 export interface GameItemProps {
   game: Game;
-  wishlists: Array<Wishlist>;
   groups: Array<Group>;
   refetchWishlistsAndGroups: (
     options?: RefetchOptions | undefined,
-  ) => Promise<
-    QueryObserverResult<
-      { wishlists: Array<Wishlist>; groups: Array<Group> },
-      Error
-    >
-  >;
+  ) => Promise<QueryObserverResult<Array<Group>, Error>>;
 }
 
 export interface CollectionWishlist {

@@ -28,7 +28,6 @@ import { post } from '~/lib/utils/api';
 
 export const GameItem = ({
   game,
-  wishlists,
   groups,
   refetchWishlistsAndGroups,
 }: GameItemProps) => {
@@ -38,17 +37,15 @@ export const GameItem = ({
   const { user } = useAuthStore();
 
   // Create collection for Select component
-  const collectionItems: Array<CollectionGroup> = groups.map(
+  const collectionItems: Array<CollectionGroup> = groups?.map(
     (group: Group) => ({
       type: 'group',
       label: group.name,
       value: group.id.toString(),
-      items: wishlists
-        .filter((wishlist: Wishlist) => wishlist.group_id === group.id)
-        .map((wishlist: Wishlist) => ({
-          label: wishlist.name,
-          value: wishlist.id.toString(),
-        })),
+      items: group.wishlists.map((wishlist: Wishlist) => ({
+        label: wishlist.name,
+        value: wishlist.id.toString(),
+      })),
     }),
   );
 

@@ -7,10 +7,10 @@ import {
   SelectRoot,
   SelectTrigger,
 } from '~/components/ui/select';
+import { WishlistImportButton } from '~/components/wishlist-import-button';
 import { useAuthStore } from '~/lib/stores/auth-store';
 import { get } from '~/lib/utils/api';
 import type { GroupData, GroupSelectProps } from '../../types/types';
-import { WishlistImportButton } from './wishlist-import-button';
 
 export const GroupSelect: React.FC<GroupSelectProps> = ({ disabled }) => {
   const [groupData, setGroupData] = useState<GroupData>({});

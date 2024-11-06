@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { GameItem } from '~/components/game-item';
 import { toaster } from '~/components/ui/toaster';
 import { useAuthStore } from '~/lib/stores/auth-store';
-import type { Game, Group, User, Wishlist } from '~/lib/types/types';
+import type { Game, Group, User } from '~/lib/types/types';
 import { get } from '~/lib/utils/api';
 import { WishlistImportButton } from './wishlist-import-button';
 
@@ -72,10 +72,7 @@ export const SearchBar = () => {
   }, [error, fetchError]);
 
   const fetchWishlistsAndGroups = async (user: User | null) => {
-    return await get<{
-      wishlists: Array<Wishlist>;
-      groups: Array<Group>;
-    }>(`/users/${user?.userId}/wishlists`);
+    return await get<Array<Group>>(`/users/${user?.userId}/groups`);
   };
 
   return (
@@ -96,8 +93,7 @@ export const SearchBar = () => {
           <GameItem
             key={game.id}
             game={game}
-            wishlists={userData?.wishlists || []}
-            groups={userData?.groups || []}
+            groups={userData || []}
             refetchWishlistsAndGroups={refetch}
           />
         ))}
