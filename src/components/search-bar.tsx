@@ -72,7 +72,7 @@ export const SearchBar = () => {
   }, [error, fetchError]);
 
   const fetchWishlistsAndGroups = async (user: User | null) => {
-    return await get<Array<Group>>(`/users/${user?.userId}/groups`);
+    return await get<{ data: Array<Group> }>(`/users/${user?.userId}/groups`);
   };
 
   return (
@@ -93,7 +93,7 @@ export const SearchBar = () => {
           <GameItem
             key={game.id}
             game={game}
-            groups={userData || []}
+            groups={userData?.data || []}
             refetchWishlistsAndGroups={refetch}
           />
         ))}
