@@ -55,7 +55,7 @@ export const WishlistImportButton: React.FC<WishlistImportButtonProps> = ({
 
     try {
       const data = await get<WishlistData>(
-        `/wishlist?steam_id=${steamId}&cc=en`,
+        `/steam/wishlist?steam_id=${steamId}&cc=en`,
       );
       setWishlistData(data);
       setOpen(true); // Open the modal after the data is fetched

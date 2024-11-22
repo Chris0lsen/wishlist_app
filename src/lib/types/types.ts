@@ -85,7 +85,7 @@ export interface GameItemProps {
   groups: Array<Group>;
   refetchWishlistsAndGroups: (
     options?: RefetchOptions | undefined,
-  ) => Promise<QueryObserverResult<Array<Group>, Error>>;
+  ) => Promise<QueryObserverResult<{ data: Array<Group> }, Error>>;
 }
 
 export interface CollectionWishlist {
