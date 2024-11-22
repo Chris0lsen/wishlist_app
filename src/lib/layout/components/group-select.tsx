@@ -1,67 +1,50 @@
-import { type ListCollection, createListCollection } from '@chakra-ui/react';
+import { createListCollection } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import {
   SelectContent,
   SelectItem,
+  SelectItemGroup,
   SelectLabel,
   SelectRoot,
   SelectTrigger,
 } from '~/components/ui/select';
-import { WishlistImportButton } from '~/components/wishlist-import-button';
+import { toaster } from '~/components/ui/toaster';
 import { useAuthStore } from '~/lib/stores/auth-store';
+import type { Group, User } from '~/lib/types/types';
 import { get } from '~/lib/utils/api';
-import type { GroupData, GroupSelectProps } from '../../types/types';
+import type { GroupSelectProps } from '../../types/types';
 
 export const GroupSelect: React.FC<GroupSelectProps> = ({ disabled }) => {
-  const [groupData, setGroupData] = useState<GroupData>({});
   const [selectedGroup, setSelectedGroup] = useState<Array<string>>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [groups, setGroups] = useState(
+    createListCollection({ items: new Array<Group>() }),
+  );
   const { user } = useAuthStore();
-  let groups: ListCollection;
 
-  useEffect(() => {
-    async function fetchGroups() {
-      if (!user) {
-        setError('User is not authenticated.');
-        return;
-      }
+  const { data: userData, error: fetchError } = useQuery({
+    queryKey: ['wishlistsAndGroups', user?.userId],
+    queryFn: () => fetchWishlistsAndGroups(user),
 
-      const userId = user.userId;
-      if (!userId) {
-        setError('User ID is not available.');
-        return;
-      }
-
-      setError(null);
-
-      try {
-        const data = await get<GroupData>(`/groups/${userId}`);
-        setGroupData(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'An unexpected error occurred.',
-        );
-        return error;
-      }
-    }
-    fetchGroups();
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  if (Object.keys(groupData).length > 0) {
-    const groupItems = Object.entries(groupData).map(
-      ([itemId, itemDetails]) => ({
-        label: itemDetails.name,
-        value: itemId,
-      }),
-    );
-    groups = createListCollection({
-      items: Object.values(groupItems),
-    });
-  } else {
-    groups = createListCollection({
-      items: [],
-    });
-  }
+  useEffect(() => {
+    if (fetchError) {
+      toaster.create({
+        description: `Error fetching wishlists: ${fetchError}`,
+        type: 'error',
+      });
+    }
+    if (userData) {
+      setGroups(createListCollection({ items: userData.data }));
+    }
+  }, [fetchError, userData]);
+
+  const fetchWishlistsAndGroups = async (user: User | null) => {
+    return await get<{ data: Array<Group> }>(`/users/${user?.userId}/groups`);
+  };
 
   return (
     <SelectRoot
@@ -77,11 +60,14 @@ export const GroupSelect: React.FC<GroupSelectProps> = ({ disabled }) => {
       </SelectTrigger>
       <SelectContent>
         {groups.items.map((group) => (
-          <SelectItem item={group} key={group.value}>
-            {group.label}
-          </SelectItem>
+          <SelectItemGroup key={group.id} label={group.name}>
+            {group.wishlists.map((wishlist) => (
+              <SelectItem item={wishlist} key={wishlist.id}>
+                {wishlist.name}
+              </SelectItem>
+            ))}
+          </SelectItemGroup>
         ))}
-        <WishlistImportButton disabled={!user?.steamId} />
       </SelectContent>
     </SelectRoot>
   );
