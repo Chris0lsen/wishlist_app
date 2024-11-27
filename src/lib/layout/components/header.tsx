@@ -10,7 +10,6 @@ import {
   SelectRoot,
   SelectTrigger,
 } from '~/components/ui/select';
-import { GroupSelect } from './group-select';
 
 export const Header = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<Array<string>>([
@@ -37,7 +36,6 @@ export const Header = () => {
         <Spacer />
         <Flex direction="row" width="80%">
           <SearchBar />
-          <GroupSelect disabled={false} />
         </Flex>
         <Flex marginLeft="auto">
           <SelectRoot

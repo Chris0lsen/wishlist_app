@@ -56,10 +56,13 @@ export const GameItem = ({
   const handleAddToWishlist = async () => {
     if (selectedWishlistId && user) {
       try {
-        await post<{ message: string }, { gameId: number }>(
-          `/wishlists/${selectedWishlistId}/games`,
-          { gameId: game.id },
-        );
+        await post<
+          { message: string },
+          { wishlist_id: number; steam_id: string }
+        >(`/wishlists/${selectedWishlistId}/games/steam/${game.id}`, {
+          wishlist_id: Number.parseInt(selectedWishlistId[0]),
+          steam_id: game.id.toString(),
+        });
         refetchWishlistsAndGroups();
         // Optionally, provide feedback to the user
       } catch (error) {

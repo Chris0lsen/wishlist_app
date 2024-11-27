@@ -13,7 +13,7 @@ import { toaster } from '~/components/ui/toaster';
 import { useAuthStore } from '~/lib/stores/auth-store';
 import type { Group, User } from '~/lib/types/types';
 import { get } from '~/lib/utils/api';
-import type { GroupSelectProps } from '../../types/types';
+import type { GroupSelectProps } from '../lib/types/types';
 
 export const GroupSelect: React.FC<GroupSelectProps> = ({ disabled }) => {
   const [selectedGroup, setSelectedGroup] = useState<Array<string>>([]);
