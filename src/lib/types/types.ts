@@ -73,6 +73,7 @@ export interface Group {
 
 export interface Game {
   id: number;
+  steam_id: string;
   tiny_image: string;
   name: string;
   price: {
