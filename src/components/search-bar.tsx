@@ -6,6 +6,7 @@ import { toaster } from '~/components/ui/toaster';
 import { useAuthStore } from '~/lib/stores/auth-store';
 import type { Game, Group, User } from '~/lib/types/types';
 import { get } from '~/lib/utils/api';
+import { GroupSelect } from './group-select';
 import { WishlistImportButton } from './wishlist-import-button';
 
 export const SearchBar = () => {
@@ -79,10 +80,14 @@ export const SearchBar = () => {
     <Flex direction="column" width="80%" mx="auto" mt={4}>
       <Flex direction="row" align="center" mb={4}>
         <Input
-          width="67%"
+          width="60%"
           placeholder="Search for a game..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <GroupSelect
+          groups={userData?.data || []}
+          refetchWishlistsAndGroups={refetch}
         />
         <WishlistImportButton disabled={!user?.steamId} />
       </Flex>
