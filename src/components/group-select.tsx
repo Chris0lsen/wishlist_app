@@ -26,20 +26,20 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
   Spinner,
   Text,
 } from '@chakra-ui/react';
 import { useAuthStore } from '~/lib/stores/auth-store';
 import { get } from '~/lib/utils/api';
 
-interface WishlistAtom {
+interface WishlistItem {
+  id: number;
   name: string;
-  price: number;
+  steam_id: string;
 }
 
-interface WishlistDada {
-  [key: string]: WishlistAtom;
+interface WishlistData {
+  [key: string]: WishlistItem;
 }
 
 export const GroupSelect = ({ groups }: GroupSelectProps) => {
@@ -48,7 +48,7 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
   ]);
 
   const [open, setOpen] = useState(false);
-  const [wishlistDada, setWishlistDada] = useState<WishlistDada>({});
+  const [wishlistData, setWishlistData] = useState<WishlistData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user, isAuthenticated } = useAuthStore();
@@ -70,7 +70,7 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
     items: collectionItems,
   });
 
-  const handleShowImportModal = async (id: Array<string>) => {
+  const handleShowGamesModal = async (wishlistId: Array<string>) => {
     if (!(isAuthenticated && user)) {
       setError('User is not authenticated.');
       return;
@@ -84,13 +84,13 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
 
     setIsLoading(true);
     setError(null);
-    setSelectedWishlistId(id);
+    setSelectedWishlistId(wishlistId);
 
     try {
-      const data = await get<WishlistDada>(
-        `/steam/wishlist?steam_id=${steamId}&cc=en`,
+      const games = await get<{ data: WishlistData }>(
+        `/wishlists/${wishlistId}/games`,
       );
-      setWishlistDada(data);
+      setWishlistData(games.data);
       setOpen(true); // Open the modal after the data is fetched
     } catch (err) {
       setError(
@@ -109,7 +109,7 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
         collection={collection}
         size="xs"
         value={selectedWishlistId}
-        onValueChange={(e) => handleShowImportModal(e.value)}
+        onValueChange={(e) => handleShowGamesModal(e.value)}
         multiple={false}
       >
         <SelectTrigger>
@@ -134,10 +134,9 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
         onOpenChange={(e) => setOpen(e.open)}
         size="xl"
       >
-        <DialogTrigger></DialogTrigger>
-
         <DialogContent>
           <DialogHeader>
+            {/* Name of selected wishlist */}
             <DialogTitle>Import Wishlist</DialogTitle>
           </DialogHeader>
 
@@ -149,9 +148,9 @@ export const GroupSelect = ({ groups }: GroupSelectProps) => {
               <Text color="red.500">{error}</Text>
             ) : (
               <div>
-                {Object.keys(wishlistDada).length > 0 ? (
+                {Object.keys(wishlistData).length > 0 ? (
                   <ul>
-                    {Object.entries(wishlistDada).map(
+                    {Object.entries(wishlistData).map(
                       ([itemId, itemDetails]) => (
                         <li key={itemId}>
                           <Text fontWeight="bold">{itemDetails.name}</Text>
