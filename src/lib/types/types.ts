@@ -43,7 +43,10 @@ export interface GroupData {
 }
 
 export interface GroupSelectProps {
-  disabled: boolean;
+  groups: Array<Group>;
+  refetchWishlistsAndGroups: (
+    options?: RefetchOptions | undefined,
+  ) => Promise<QueryObserverResult<{ data: Array<Group> }, Error>>;
 }
 
 export interface WishlistItem {
